@@ -7,54 +7,137 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+# Lowcost — CRUD Laravel + Bootstrap
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Aplicación web de gestión de productos desarrollada con Laravel 12 y Bootstrap 5. Permite visualizar productos sin necesidad de registro, y gestionar el catálogo (crear, editar, eliminar) una vez autenticado.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Tecnologías
 
-## Learning Laravel
+- **PHP** 8.2.4
+- **Laravel** 12.56.0
+- **Bootstrap** 5.3
+- **MySQL** (via XAMPP)
+- **Blade** (motor de plantillas de Laravel)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Instalación
 
-## Laravel Sponsors
+### 1. Clona el repositorio
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+git clone https://github.com/mrcsjalca/Lowcost.git
+cd crudlaravelbootstrap
+```
 
-### Premium Partners
+### 2. Instala las dependencias
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```bash
+composer install
+```
 
-## Contributing
+### 3. Copia el archivo de entorno
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-## Code of Conduct
+### 4. Configura la base de datos en `.env`
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=lowcost
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-## Security Vulnerabilities
+### 5. Ejecuta las migraciones
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+php artisan migrate
+```
 
-## License
+### 6. Inicia el servidor
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-"# Lowcost" 
+```bash
+php artisan serve
+```
+
+Accede en: [http://127.0.0.1:8000](http://127.0.0.1:8000)
+
+---
+
+## Estructura de vistas
+
+```
+resources/views/
+├── welcome.blade.php         # Página de inicio pública
+├── productos/
+│   ├── index.blade.php       # Listado de productos (público)
+│   └── form.blade.php        # Formulario crear/editar (requiere login)
+```
+
+---
+
+## Autenticación
+
+El sistema usa Laravel Auth. Las rutas protegidas requieren login:
+
+| Acción | Requiere login |
+|--------|---------------|
+| Ver productos |  No |
+| Crear producto |  Sí |
+| Editar producto |  Sí |
+| Eliminar producto |  Sí |
+
+---
+
+## Modelo — Producto
+
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| `id` | integer | Clave primaria |
+| `nombre` | string | Nombre del producto |
+| `descripcion` | text | Descripción del producto |
+| `precio` | decimal | Precio en euros (mín. 0) |
+| `categoria` | string | Categoría del producto |
+| `stock` | integer | Unidades disponibles (mín. 0) |
+| `imagen` | string | Ruta de la imagen subida |
+
+---
+
+## Rutas principales
+
+| Método | URL | Descripción |
+|--------|-----|-------------|
+| GET | `/` | Página de bienvenida |
+| GET | `/productos` | Listado de productos |
+| GET | `/productos/create` | Formulario de creación |
+| POST | `/productos` | Guardar nuevo producto |
+| GET | `/productos/{id}/edit` | Formulario de edición |
+| POST | `/productos/{id}/update` | Actualizar producto |
+| DELETE | `/productos/{id}` | Eliminar producto |
+
+---
+
+## Subida de imágenes
+
+Las imágenes se guardan en `public/images/`. El campo acepta: `jpeg`, `png`, `jpg`, `gif`, `svg` con un máximo de 2MB.
+
+---
+
+## Validaciones
+
+- El precio y el stock no pueden ser negativos.
+- Los productos sin stock se muestran con badge rojo y la imagen en opacidad reducida.
+- Si no hay productos, se muestra un mensaje informativo.
+
+---
+
+## Autor
+**Marcos Jalca** - Desarrollado como proyecto de práctica con Laravel 12.
