@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Producto;
 use Illuminate\Http\Request;
+use App\Helpers\AdminHelper;
+
 
 class ProductosController extends Controller
 {
@@ -20,6 +22,7 @@ class ProductosController extends Controller
 
     public function create()
     {
+        abort_unless(AdminHelper::isAdmin(), 403, 'Acceso denegado');
         $producto = new Producto();
         $title = "Crear nuevo producto";
         $textButton = "Crear";
@@ -29,6 +32,7 @@ class ProductosController extends Controller
 
     public function store(Request $request)
     {
+        abort_unless(AdminHelper::isAdmin(), 403, 'Acceso denegado');
         $request->validate([
             'nombre'      => 'required',
             'precio'      => 'required|numeric|min:0',
@@ -63,6 +67,7 @@ class ProductosController extends Controller
 
     public function edit(string $id)
     {
+        abort_unless(AdminHelper::isAdmin(), 403, 'Acceso denegado');
         $producto = Producto::findOrFail($id);
         $title = "Editar producto";
         $textButton = "Actualizar";
@@ -73,6 +78,7 @@ class ProductosController extends Controller
 
     public function update(Request $request, string $id)
     {
+        abort_unless(AdminHelper::isAdmin(), 403, 'Acceso denegado');
         $request->validate([
             'nombre'      => 'required',
             'precio'      => 'required|numeric|min:0',

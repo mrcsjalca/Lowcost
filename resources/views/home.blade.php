@@ -5,12 +5,18 @@
 
     <h1 class="mb-4">Lista de Productos</h1>
 
-    <!-- Botón crear -->
+    @if(Auth::check() && Auth::user()->email === env('ADMIN_EMAIL'))
+
     <a href="{{ route('productos.create') }}" class="btn btn-primary mb-3">
         + Nuevo Producto
     </a>
 
-    <!-- Tabla -->
+    @endif
+    
+    @if(Auth::check() && Auth::user()->email === env('ADMIN_EMAIL'))
+    <a href="{{ route('saldo.index') }}" class="btn btn-warning btn-sm">Saldos</a>
+    @endif
+    
     <div class="card">
         <div class="card-body">
 
@@ -36,24 +42,24 @@
 
                             <td>
                                 @if($producto->imagen)
-                                    <img src="{{ $producto->imagen }}" width="80">
+                                <img src="{{ asset($producto->imagen) }}" width="80">
                                 @else
                                     Sin imagen
                                 @endif
                             </td>
 
                             <td>
-                                <!-- Ver -->
+
                                 <a href="{{ route('productos.show', $producto) }}" class="btn btn-info btn-sm">
                                     Ver
                                 </a>
 
-                                <!-- Editar -->
+
+                                @if(Auth::check() && Auth::user()->email === env('ADMIN_EMAIL'))
                                 <a href="{{ route('productos.edit', $producto) }}" class="btn btn-warning btn-sm">
                                     Editar
                                 </a>
 
-                                <!-- Eliminar -->
                                 <form action="{{ route('productos.destroy', $producto) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
@@ -62,6 +68,7 @@
                                         Eliminar
                                     </button>
                                 </form>
+                                @endif
                             </td>
                         </tr>
                     @empty
