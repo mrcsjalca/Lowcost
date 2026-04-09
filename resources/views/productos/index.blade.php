@@ -14,6 +14,13 @@
              alt="Lowcost" style="height: 45px; border-radius: 8px;">
     </a>
     <div class="d-flex gap-2 align-items-center">
+        <a href="{{ route('carrito.index') }}" class="btn btn-outline-dark btn-sm">
+            Carrito
+            @php $totalItems = array_sum(array_column(session()->get('carrito', []), 'cantidad')); @endphp
+            @if($totalItems > 0)
+                <span class="badge bg-danger">{{ $totalItems }}</span>
+            @endif
+        </a>
         @guest
             <a href="{{ route('login') }}" class="btn btn-outline-secondary btn-sm">Iniciar sesión</a>
             <a href="{{ route('register') }}" class="btn btn-dark btn-sm">Registrarse</a>
@@ -29,13 +36,6 @@
                 <button class="btn btn-outline-secondary btn-sm">Cerrar sesión</button>
             </form>
         @endguest
-        <a href="{{ route('carrito.index') }}" class="btn btn-outline-dark btn-sm">
-            Carrito
-            @php $totalItems = array_sum(array_column(session()->get('carrito', []), 'cantidad')); @endphp
-            @if($totalItems > 0)
-                <span class="badge bg-danger">{{ $totalItems }}</span>
-            @endif
-        </a>
     </div>
 </nav>
 
@@ -90,7 +90,7 @@
                             @guest
                                 <a href="{{ route('login') }}" class="btn btn-dark btn-sm">Añadir al carrito</a>
                             @else
-                                @if(Auth::user()->email !== env('ADMIN_EMAIL'))  {{-- ✅ oculta al admin --}}
+                                @if(Auth::user()->email !== env('ADMIN_EMAIL'))
                                     @php
                                         $carrito = session()->get('carrito', []);
                                         $cantidadEnCarrito = isset($carrito[$producto->id]) ? $carrito[$producto->id]['cantidad'] : 0;
