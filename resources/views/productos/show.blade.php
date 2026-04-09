@@ -20,7 +20,6 @@
     <div class="card shadow-sm">
         <div class="row g-0">
 
-            {{-- Imagen --}}
             <div class="col-md-5">
                 @if($producto->imagen)
                     <img src="{{ asset($producto->imagen) }}"
@@ -34,7 +33,6 @@
                 @endif
             </div>
 
-            {{-- Info --}}
             <div class="col-md-7">
                 <div class="card-body p-4">
                     <h2 class="fw-bold mb-1">{{ $producto->nombre }}</h2>
@@ -55,7 +53,6 @@
 
                     <hr>
 
-                    {{-- Botones --}}
                     <div class="d-flex gap-2 flex-wrap mt-3">
 
                         @auth
